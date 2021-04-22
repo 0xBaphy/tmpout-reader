@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Simple terminal reader for tmpout.sh
+# It uses less as a pager, but it is posible
+# to use other programs such as neovim or nano.
+# Use ctrl C to exit.
+#
+# 22/04/2021
+# 0xBaphy <3
+
+# Only uncomment one
+pager="less"
+#pager="nvim -R"
+#pager="nano -v -"
+
+getArticles() {
+    grep -Po '([0-9]{1,2})\.[0-9]{1,2}' $1 | \
+    awk 'BEGIN{FS="."}{$1=""; print}'
+}
+
+printArticle() {
+    clear
+    cat $tmp
+    echo "  >> Input the number of the article you'd like to read."
+    read -p "  >> $vol." article
+
+    volArticle="https://tmpout.sh/$vol/txt/$article.txt"
+
+    if test "${articles#*$article}" != "$articles"; then
+        curl -s $volArticle 2>&1 | $pager; printArticle
+
+    else
+        echo "\e[2A\e[K  >> Input the number of the article you'd like to read."
+        printArticle
+    fi
+}
+
+zinePrompt() {
+    tmp=$(mktemp)
+    vol=1
+    volIndex="https://tmpout.sh/$vol/txt/index.txt"
+    curl -s $volIndex > $tmp
+    articles=$(getArticles $tmp)
+    printArticle
+}
+
+zinePrompt
