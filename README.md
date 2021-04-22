@@ -1,6 +1,6 @@
 # tmpout-reader
 
-Really simple terminal reader for [tmpout](tmpout.sh).
+Really simple terminal reader for [tmpout](https://tmpout.sh).
 
 Currently it can only display the first volume
 I'll update the script with a volume menu once volume 2 drops.
